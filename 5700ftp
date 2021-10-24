@@ -1,0 +1,122 @@
+#!/usr/bin/env python
+
+from connection.connection_manager import FTPConnectionManager
+import sys
+import os
+
+class CommandParser:
+
+    def __init__(self):
+        self.command = sys.argv[1]
+        self.path = sys.argv[2]
+        if (len(sys.argv) == 4):
+            self.path2 = sys.argv[3]
+        else:
+            self.path2 = ""
+
+    def parse_command(self):
+        # Determine which arg is remote and which is local
+        if self.path[:6] == "ftp://":
+            remote = self.path
+            local = self.path2
+            rp = 1
+        else:
+            remote = self.path2
+            local = self.path
+            rp = 2
+
+        # Get username and password
+        if "@" in remote:
+            username_password = remote.split("@")[0].split("ftp://")[1]
+            user = username_password.split(":")[0]
+            pw = username_password.split(":")[1]
+            remote = remote.split(username_password + "@")[1]
+        else:
+            remote = remote.split("ftp://")[1]
+            user = None
+            pw = ""
+        
+        # Get host and port
+        if ":" in remote:
+            host = remote.split(":")[0]
+            port = int(remote.split(":")[1].split("/")[0])
+        else:
+            host = remote.split("/")[0]
+            port = 21
+
+        # Get remote path
+        remote = "/" + remote.split("/", 1)[1]
+
+        print("Command: " + str(self.command))
+        print("Username: " + str(user))
+        print("Password: " + str(pw))
+        print("Host: " + str(host))
+        print("Port: " + str(port))
+        print("Remote: " + str(remote))
+        print("Local: " + str(local))
+        print("Remote Path: " + str(rp))
+
+        return self.command, user, pw, host, port, remote, local, rp
+        
+if __name__ == "__main__":
+    print ("Hello!")
+    parser = CommandParser()
+
+    # "walshjohn1"
+    # "YMPEGLqOiAd62cTpzFX7"
+
+    command, username, password, host, port, remote, local, rp = parser.parse_command()
+
+    connection = FTPConnectionManager(username, password, host, port)
+
+    if command == "ls":
+        connection.list_directory(remote)
+
+    elif command == "mkdir":
+        connection.make_directory(remote)
+
+    elif command == "rm":
+        connection.remove_file(remote)
+
+    elif command == "rmdir":
+        connection.remove_directory(remote)
+
+    elif command == "cp":
+        if rp == 1:
+            connection.save_remote_file_to_local(remote, local)
+        else:
+            connection.upload_file_to_remote(local, remote)
+
+    elif command == "mv":
+        if rp == 1:
+            connection.save_remote_file_to_local(remote, local)
+            connection = FTPConnectionManager(username, password, host, port)
+            connection.remove_file(remote)
+        else:
+            connection.upload_file_to_remote(local, remote)
+            os.system("rm " + local)
+
+    '''
+    connection.list_directory("/")
+
+    connection = FTPConnectionManager(username, password, host, port)
+    connection.make_directory("/test_dir")
+
+    connection = FTPConnectionManager(username, password, host, port)
+    connection.make_directory("/test_dir_2")
+
+    connection = FTPConnectionManager(username, password, host, port)
+    connection.remove_directory("/test_dir")
+
+    connection = FTPConnectionManager(username, password, host, port)
+    connection.upload_file_to_remote("temp-1.txt", "/test_dir_2/temp-test.txt")
+
+    connection = FTPConnectionManager(username, password, host, port)
+    connection.save_remote_file_to_local("/test_dir_2/temp-test.txt", "temp-2.txt")
+
+    connection = FTPConnectionManager(username, password, host, port)
+    connection.remove_file("/test_dir_2/temp-test.txt")
+
+    connection = FTPConnectionManager(username, password, host, port)
+    connection.remove_directory("/test_dir_2")
+    '''

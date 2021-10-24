@@ -6,20 +6,20 @@ import re
 class FTPConnectionManager:
     MAX_MESSAGE_SIZE = 4096
 
-    FTP_HOST = "ftp.5700.network"
-    FTP_PORT = 21
+    # FTP_HOST = "ftp.5700.network"
+    # FTP_PORT = 21
     ANONYMOUS_USERNAME = "anonymous"
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, host, port):
         self.username = username
         if username is None:
-            self.username = FTPConnectionManager.ANONYMOUS_USERNAME
+            self.username = FTPConnectionManager.ANONYMOUS_USERNAME 
         self.password = password
         '''
         Create a socket for control channel and connect to the FTP host & port
         '''
         self.control_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.control_socket.connect((FTPConnectionManager.FTP_HOST, FTPConnectionManager.FTP_PORT))
+        self.control_socket.connect((host, port))
         '''
         Initialize a socket for data channel. This data socket is created later when performing ls, rm, rmdir, mkdir,
         cp & mv commands.
