@@ -35,8 +35,7 @@ class FTPConnectionManager:
         data = self.receive_control_message()
         Utils.print_logs("Response after username is passed: ", data)
 
-        # TODO: Verify is anonymous username works.
-        if self.username is not FTPConnectionManager.ANONYMOUS_USERNAME:
+        if self.username is not FTPConnectionManager.ANONYMOUS_USERNAME and self.password != None:
             self.send_control_message("PASS {}\r\n".format(self.password))
 
             data = self.receive_control_message()

@@ -28,7 +28,6 @@ class CommandParser:
             rp = 2
 
         # Get username and password
-        # SKIP PASS REQUEST 
         if "@" in remote:
             username_password = remote.split("@")[0].split("ftp://")[1]
             if ":" in username_password:
@@ -36,12 +35,12 @@ class CommandParser:
                 pw = username_password.split(":")[1]
             else:
                 user = username_password
-                pw = ""
+                pw = None
             remote = remote.split(username_password + "@")[1]
         else:
             remote = remote.split("ftp://")[1]
             user = None
-            pw = ""
+            pw = None
 
         # Get host and port
         if ":" in remote:
