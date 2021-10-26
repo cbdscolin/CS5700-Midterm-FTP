@@ -1,6 +1,0 @@
-this is nothing but a test message
-which should be sent to the server
-
-
-test
-end

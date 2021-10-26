@@ -96,7 +96,13 @@ class FTPConnectionManager:
 
     def receive_data_channel_message(self):
         # Received message from data channel. Used in ls, cp and mv command.
-        response_message = self.data_socket.recv(FTPConnectionManager.MAX_MESSAGE_SIZE)
+        response_message = ""
+        while True:
+            msg_tmp = self.data_socket.recv(FTPConnectionManager.MAX_MESSAGE_SIZE)
+            if msg_tmp:
+                response_message += msg_tmp
+            else:
+                break
         return response_message
 
     '''
