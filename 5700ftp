@@ -5,9 +5,11 @@ from utils.util import Utils
 import sys
 import os
 
-
+# A class for parsing through inputted user commands
 class CommandParser:
 
+    # Initializes the command parser and splits the user input into different 
+    # parameters
     def __init__(self):
         self.command = sys.argv[1]
         self.path = sys.argv[2]
@@ -16,6 +18,9 @@ class CommandParser:
         else:
             self.path2 = ""
 
+    # Parses through the user's inputted parameters, such as username, password, 
+    # host, port, remote path, and local path (only host and remote path are 
+    # required)
     def parse_command(self):
         # Determine which arg is remote and which is local
         if self.path[:6] == "ftp://":
@@ -64,7 +69,9 @@ class CommandParser:
 
         return self.command, user, pw, host, port, remote, local, rp
 
-
+# Run the program based on the user's inputted command and 
+# paths. Supports functionality for ls, mkdir, rm, rmdir, cp, 
+# and mv. 
 if __name__ == "__main__":
 
     try:

@@ -9,12 +9,12 @@ class Utils:
 
     @staticmethod
     def save_file(filename, contents):
-        f = open(filename, "w")
+        f = open(filename, "wb")
         f.write(contents)
         f.close()
 
     @staticmethod
     def get_file_contents(filename):
-        f = open(filename, "r")
+        f = open(filename, "rb")
         contents = f.read()
         return contents
