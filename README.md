@@ -75,6 +75,9 @@ We tested our code manually against the following cases
 8. We moved a file from FTP server to local file system. We verified that this file was deleted from the FTP 
    server. We also verified that the contents of the local file match the contents of the FTP server.
 
+Apart from this we also added a few automation tests to simplify the process of testing. The unit tests can be 
+found in FTPTests.py. These tests use ftplib package to verify if our program executes the relevant command
+as expected.
 
 
 Breakdown of work:
@@ -87,7 +90,9 @@ Colin worked on writing functionality related to listing directories, creating a
 uploading file to FTP server, downloading file from FTP server and deleting file on the FTP server. 
 
 John worked on integrating this code with the code that does command line parsing (calling the relevant
-functions). Colin and John worked together on fixing issues related to the code and handling possible errors. 
+functions). Colin and John worked together on fixing issues related to the code and handling possible errors.
+
+John and Colin worked together on adding unit tests to check the functionality implemented in the program.
 
 
 
