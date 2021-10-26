@@ -1,10 +1,10 @@
 import socket
 from utils.util import Utils
-import re
 
 
 class FTPConnectionManager:
-    MAX_MESSAGE_SIZE = 4096
+    # Maximum message size is set to 8 MB.
+    MAX_MESSAGE_SIZE = 1024 * 1024 * 8
 
     # FTP_HOST = "ftp.5700.network"
     # FTP_PORT = 21
@@ -125,12 +125,13 @@ class FTPConnectionManager:
         self.start_data_channel()
         self.send_control_message("LIST {}\r\n".format(path))
         data_channel_response = self.receive_data_channel_message()
-        Utils.print_logs("LS Command response: \n", data_channel_response)
+        Utils.print_logs("LS Command response: \n")
+        print (data_channel_response)
         self.close_data_connection()
         self.close_control_connection()
 
     '''
-    Creates a directory in the specified remote ftp path. First we create a data channel and send the 
+    Creates a directory in the specified remote ftp path. First we send the 
     MKD message to control channel to create directory.
     '''
     def make_directory(self, path):
@@ -139,18 +140,15 @@ class FTPConnectionManager:
         self.send_control_message("MKD {}\r\n".format(path))
         data_channel_response = self.receive_control_message()
         Utils.print_logs("MKDIR Command response: \n", data_channel_response)
-        self.close_data_connection()
 
     '''
-    Removes a directory from the specified remote ftp path. First we create a data channel and send the 
+    Removes a directory from the specified remote ftp path. First we send the 
     RMDIR message to control channel to remove directory.
     '''
     def remove_directory(self, path):
-        self.start_data_channel()
         self.send_control_message("RMD {}\r\n".format(path))
-        data_channel_response = self.receive_control_message()
-        Utils.print_logs("RMDIR Command response: \n", data_channel_response)
-        self.close_data_connection()
+        control_channel_response = self.receive_control_message()
+        Utils.print_logs("RMDIR Command response: \n", control_channel_response)
 
     '''
     Removes a file from the specified remote ftp path. First we create a data channel and send the 
@@ -159,9 +157,8 @@ class FTPConnectionManager:
     def remove_file(self, path):
         self.start_data_channel()
         self.send_control_message("DELE {}\r\n".format(path))
-        data_channel_response = self.receive_control_message()
-        Utils.print_logs("RM Command response: \n", data_channel_response)
-        self.close_data_connection()
+        control_channel_response = self.receive_control_message()
+        Utils.print_logs("RM Command response: \n", control_channel_response)
 
     '''
     Downloads the contents of the remote file on the FTP server and saves the contents to a local file in the specified 
@@ -213,7 +210,5 @@ class FTPConnectionManager:
     '''
     @staticmethod
     def check_response_code(response_code, msg):
-        # TODO: Check if other error codes should be handled differently
         if 400 <= response_code <= 600:
-            Utils.print_logs("Error occurred ", msg)
-            exit(1)
+            raise Exception("Request failed: " + msg + " Response code: " + str(response_code))

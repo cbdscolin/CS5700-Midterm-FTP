@@ -5,7 +5,7 @@ class Utils:
         res = ""
         for log in log_lines:
             res += str(log)
-        print res
+        #print res
 
     @staticmethod
     def save_file(filename, contents):
