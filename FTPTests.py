@@ -78,8 +78,9 @@ class MyTestCase(unittest.TestCase):
         ftp.login(MyTestCase.username, MyTestCase.password)
 
         # Verify ls output.
-        data = []
-        ftp.dir(data.append)
+        data = os.popen('./5700ftp ls ftp://{}:{}@{}/'.format(MyTestCase.username, MyTestCase.password, MyTestCase.server)).read()
+
+        data = data.strip().split("\r\n")
         self.assertEqual(len(data), 3)
         self.assertTrue("dir_test_1" in data[0])
         self.assertTrue("dir_test_2" in data[1])
